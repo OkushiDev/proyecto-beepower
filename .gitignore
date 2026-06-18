@@ -1,0 +1,32 @@
+# ==========================================
+# Archivo de ignorado para Proyecto BeePower
+# ==========================================
+
+# Dependencias y compilados de Node.js (Frontend TypeScript)
+frontend/node_modules/
+frontend/dist/
+frontend/build/
+.npm/
+
+# Entornos y compilados de Python (Backend FastAPI)
+backend/__pycache__/
+backend/*.py[cod]
+backend/*$py.class
+backend/.venv/
+backend/venv/
+backend/env/
+.pytest_cache/
+
+# Variables de entorno y credenciales (Docker / Local)
+.env
+.env.*
+*.pem
+*.key
+
+# Archivos del sistema operativo y editores de código
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+EOF
