@@ -1,0 +1,29 @@
+# Excluir el entorno virtual local del sistema anfitrión Linux
+# Esto es crítico para que las librerías binarias se compilen nativamente en Alpine
+.venv/
+venv/
+env/
+
+# Excluir la caché local de Python
+**/__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Excluir metadatos de control de versiones locales
+.git
+.gitignore
+.dockerignore
+
+# Excluir secretos locales
+# Las variables de entorno se inyectan dinámicamente vía Docker Compose, no estáticamente
+.env
+.env.*
+
+# Excluir configuraciones de desarrollo locales
+alembic.ini
+
+# Excluir cachés de pruebas y linters
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/

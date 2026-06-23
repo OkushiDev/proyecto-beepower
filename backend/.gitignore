@@ -1,0 +1,33 @@
+# Caché compilada de Python (Bytecode)
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Entornos virtuales locales
+# Forzamos la exclusión del entorno administrado por uv y carpetas tradicionales
+.venv/
+venv/
+env/
+ENV/
+
+# Configuración de entorno y secretos (Seguridad Crítica)
+.env
+.env.*
+!.env.example
+
+# Estados efímeros de herramientas de desarrollo y testing
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+# Archivos del sistema operativo anfitrión
+.DS_Store
+Thumbs.db
+
+.python-version
+README.md
+
+__init__.py
