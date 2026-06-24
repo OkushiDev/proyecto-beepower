@@ -25,6 +25,14 @@ Cualquier dispositivo anfitrión que requiera clonar e inicializar el entorno de
 ```bash
 sudo pacman -Syu git docker docker-compose github-cli
 ```
+En caso de tener un error con el despliegue en Archlinux, usar estos comandos en:
+```bash
+# Iniciar y habilitar el servicio
+sudo systemctl enable --now docker.service
+
+# Añadir el usuario actual al grupo de Docker
+sudo usermod -aG docker $USER
+```
 
 ---
 
