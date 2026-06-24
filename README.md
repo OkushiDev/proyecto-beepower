@@ -22,6 +22,10 @@ Cualquier dispositivo anfitrión que requiera clonar e inicializar el entorno de
 * **Docker Compose** (v2.0.0 o superior)
 * **Git**
 
+```bash
+sudo pacman -Syu git docker docker-compose github-cli
+```
+
 ---
 
 ## 3. Instrucciones de Instalación y Despliegue
