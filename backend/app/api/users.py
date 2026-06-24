@@ -1,17 +1,53 @@
 from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 
 from app.db.database import get_db
 from app.db.models import User
-from app.schemas.user import UserCreate, UserResponse
+from app.schemas.user import UserCreate, UserResponse, UserUpdate
 from app.core.security import get_password_hash
+from app.core.security import verify_access_token
 
 from typing import List
-# Asegúrate de importar el nuevo esquema UserUpdate
-from app.schemas.user import UserCreate, UserResponse, UserUpdate
-
 router = APIRouter()
+
+
+# Define el endpoint donde FastAPI buscará el token en la interfaz de Swagger UI
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/login")
+
+async def get_current_user(
+    token: str = Depends(oauth2_scheme), 
+    db: AsyncSession = Depends(get_db)
+) -> User:
+    """
+    Dependencia reutilizable que valida el token JWT e inyecta el objeto del usuario
+    actual autenticado en los endpoints protegidos.
+    """
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="No se pudieron validar las credenciales de acceso",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+    
+    # 1. Verificar y decodificar token
+    user_id = verify_access_token(token)
+    if user_id is None:
+        raise credentials_exception
+        
+    # 2. Consultar la existencia del usuario en la base de datos
+    query = select(User).where(User.id == int(user_id))
+    result = await db.execute(query)
+    user = result.scalar_one_or_none()
+    
+    if user is None:
+        raise credentials_exception
+        
+    # 3. Validar si la cuenta no se encuentra deshabilitada
+    if not user.is_active:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Usuario inactivo")
+        
+    return user
 
 # response_model=UserResponse es nuestra aduana de salida (oculta la contraseña)
 # status_code=201 es el estándar web para indicar que un recurso fue creado exitosamente
@@ -72,7 +108,7 @@ async def read_user(user_id: int, db: AsyncSession = Depends(get_db)):
 
 # --- ACTUALIZAR USUARIO (UPDATE) ---
 @router.patch("/{user_id}", response_model=UserResponse)
-async def update_user(user_id: int, user_in: UserUpdate, db: AsyncSession = Depends(get_db)):
+async def update_user(user_id: int, user_in: UserUpdate, db: AsyncSession = Depends(get_db),current_user: User = Depends(get_current_user)):
     """Actualiza la contraseña o el estado de un usuario."""
     query = select(User).where(User.id == user_id)
     result = await db.execute(query)
@@ -98,8 +134,12 @@ async def update_user(user_id: int, user_in: UserUpdate, db: AsyncSession = Depe
 
 # --- ELIMINAR USUARIO (DELETE) ---
 @router.delete("/{user_id}", status_code=status.HTTP_204_NO_CONTENT)
-async def delete_user(user_id: int, db: AsyncSession = Depends(get_db)):
-    """Elimina permanentemente un usuario de la base de datos."""
+async def delete_user(
+    user_id: int, 
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user) # <-- Restricción inyectada
+):
+    """Elimina permanentemente un usuario. Requiere autenticación JWT."""
     query = select(User).where(User.id == user_id)
     result = await db.execute(query)
     user = result.scalar_one_or_none()
@@ -110,3 +150,4 @@ async def delete_user(user_id: int, db: AsyncSession = Depends(get_db)):
     await db.delete(user)
     await db.commit()
     return None
+

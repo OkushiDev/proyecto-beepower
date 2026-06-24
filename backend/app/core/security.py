@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta, timezone
 import jwt
+from jwt.exceptions import PyJWTError
 from passlib.context import CryptContext
 from app.core.config import settings
 
@@ -36,3 +37,17 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None) -> s
     # Criptografía pura: Empaquetamos, firmamos con la clave secreta y devolvemos el string
     encoded_jwt = jwt.encode(to_encode, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
     return encoded_jwt
+
+def verify_access_token(token: str) -> str | None:
+    """
+    Decodifica un token JWT, verifica su firma y retorna el 'subject' (ID del usuario)
+    si es válido. Retorna None si el token expiró o es inválido.
+    """
+    try:
+        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
+        user_id: str | None = payload.get("sub")
+        if user_id is None:
+            return None
+        return user_id
+    except PyJWTError:
+        return None
