@@ -7,7 +7,7 @@ from sqlalchemy.ext.asyncio import async_engine_from_config
 
 from app.core.config import settings
 from app.db.database import Base
-from app.db.models import User, GameItem  # CRÍTICO
+from app.db.models import User, GameItem  # Añadir nuevo cada vez que se crea una entidad
 
 from alembic import context
 
