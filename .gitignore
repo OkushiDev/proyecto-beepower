@@ -17,6 +17,9 @@ backend/venv/
 backend/env/
 .pytest_cache/
 
+**/__pycache__/
+*.pyc
+
 # Variables de entorno y credenciales (Docker / Local)
 .env
 .env.*
