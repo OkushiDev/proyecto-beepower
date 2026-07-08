@@ -1,4 +1,4 @@
-# BeePower API - Sistema de Gestión de Game Data, Seguridad y Game Data
+# BeePower API - Sistema de Gestión de Game Data, Seguridad y bases de datos
 
 Este proyecto tiene como objetivo poner en practica el desarrollo de una infraestructura de backend de alto rendimiento orientada a la persistencia asíncrona de datos, control de acceso perimetral mediante OAuth2/JWT y aprovisionamiento de datos estructurados dinámicos (*Game Data*) para motores de videojuegos (Unity/Godot), entre otros, utilizando FastAPI y TypeScript. 
 
