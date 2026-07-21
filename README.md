@@ -23,7 +23,7 @@ Cualquier dispositivo anfitrión que requiera clonar e inicializar el entorno de
 * **Git**
 
 ```bash
-sudo pacman -Syu git docker docker-compose github-cli
+sudo pacman -Syu git docker docker-compose github-cli nodejs npm
 ```
 En caso de tener un error con el despliegue en Archlinux, usar estos comandos en:
 ```bash
