@@ -56,6 +56,12 @@ winget install --id GitHub.cli -e --source winget
 
 ```
 
+Comando para instalar NodeJS:
+
+```powershell
+winget install OpenJS.NodeJS.LTS
+```
+
 ## PASO 3: INSTALACIÓN DE UV (GESTOR DE PAQUETES DE PYTHON)
 Dado que uv no utiliza un instalador tradicional, se descarga y configura en el entorno de usuario mediante su script oficial de PowerShell.
 
