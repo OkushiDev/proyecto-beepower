@@ -2,6 +2,7 @@ import React from 'react';
 import { useAuthStore } from '../../store/useAuthStore';
 import { useNavigate } from 'react-router-dom';
 import { ItemList } from '../items/components/ItemList';
+import { ItemForm } from '../items/components/ItemForm';
 
 export const Dashboard: React.FC = () => {
   const logout = useAuthStore((state) => state.logout);
@@ -20,8 +21,10 @@ export const Dashboard: React.FC = () => {
         Cerrar Sesión
       </button>
 
-      <hr style={{ margin: '30px 0' }} />
+      <h1>Panel de Control - Beepower</h1>
 
+      <ItemForm/>
+      <hr />
       {/* Renderizado del catálogo de ítems */}
       <ItemList />
     </div>
