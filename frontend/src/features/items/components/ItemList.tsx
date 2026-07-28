@@ -1,8 +1,15 @@
 import React from 'react';
-import { useItems } from '../hooks/useItems';
+import { useItems, useDeleteItem } from '../hooks/useItems';
 
 export const ItemList: React.FC = () => {
   const { data: items, isLoading, isError, error } = useItems();
+  const deleteItemMutation = useDeleteItem();
+
+  const handleDelete = (id: string, nombre: string) => {
+    if (confirm(`¿Estás seguro de que deseas eliminar el ítem "${nombre}"?`)) {
+      deleteItemMutation.mutate(id);
+    }
+  };
 
   if (isLoading) return <div>Cargando catálogo de ítems desde el servidor...</div>;
   if (isError) return <div style={{ color: 'red' }}>Error al cargar ítems: {(error as Error).message}</div>;
@@ -22,13 +29,35 @@ export const ItemList: React.FC = () => {
                 padding: '10px',
                 marginBottom: '10px',
                 borderRadius: '5px',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
               }}
             >
-              <strong>{item.nombre}</strong> ({item.categoria})
-              <p style={{ margin: '5px 0', fontSize: '0.9em', color: '#666' }}>
-                {item.descripcion || 'Sin descripción'}
-              </p>
-              <small>Stack Máx: {item.stack_maximo} | Raro: {item.raro ? 'Sí' : 'No'}</small>
+              <div>
+                <strong>{item.nombre}</strong> ({item.categoria}) - <small>ID: {item.id}</small>
+                <p style={{ margin: '5px 0', fontSize: '0.9em', color: '#666' }}>
+                  {item.descripcion || 'Sin descripción'}
+                </p>
+                <small>
+                  Stack Máx: {item.stack_maximo} | Compra: ${item.precio_compra} | Venta: ${item.precio_venta}
+                </small>
+              </div>
+
+              <button
+                onClick={() => handleDelete(item.id, item.nombre)}
+                disabled={deleteItemMutation.isPending}
+                style={{
+                  backgroundColor: '#ff4d4f',
+                  color: 'white',
+                  border: 'none',
+                  padding: '6px 12px',
+                  borderRadius: '4px',
+                  cursor: 'pointer',
+                }}
+              >
+                Eliminar
+              </button>
             </li>
           ))}
         </ul>
