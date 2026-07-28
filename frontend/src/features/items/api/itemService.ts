@@ -12,3 +12,20 @@ export const createItemRequest = async (itemData: GameItemCreate): Promise<GameI
   const response = await api.post<GameItem>('/items/', itemData);
   return response.data;
 };
+
+// Eliminar un ítem por su ID
+export const deleteItemRequest = async (itemId: string): Promise<void> => {
+  await api.delete(`/items/${itemId}`);
+};
+
+// Actualizar un ítem existente por su ID
+export const updateItemRequest = async ({
+  id,
+  itemData,
+}: {
+  id: string;
+  itemData: GameItemCreate;
+}): Promise<GameItem> => {
+  const response = await api.put<GameItem>(`/items/${id}`, itemData);
+  return response.data;
+};
